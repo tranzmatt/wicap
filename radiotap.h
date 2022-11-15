@@ -16,6 +16,23 @@
 #ifndef __RADIOTAP_H
 #define __RADIOTAP_H
 
+#if defined(__APPLE__)
+#include <libkern/OSByteOrder.h>
+#define bswap_16 OSSwapInt16
+#define bswap_32 OSSwapInt32
+#define bswap_64 OSSwapInt64
+#include <machine/endian.h>
+#ifndef le16toh
+#define le16toh(x) OSSwapLittleToHostInt16(x)
+#endif
+#ifndef le32toh
+#define le32toh(x) OSSwapLittleToHostInt32(x)
+#endif
+#ifndef le64toh
+#define le64toh(x) OSSwapLittleToHostInt64(x)
+#endif
+#endif
+
 /**
  * struct ieee82011_radiotap_header - base radiotap header
  */
@@ -39,7 +56,7 @@ struct ieee80211_radiotap_header {
 	 * @it_present: (first) present word
 	 */
 	uint32_t it_present;
-};
+} __attribute__((__packed__));
 
 /* version is always 0 */
 #define PKTHDR_RADIOTAP_VERSION	0

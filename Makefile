@@ -15,19 +15,21 @@ CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing 
 LIBS += -lpcap
 
 OBJS += ./radiotap.o
-OBJS += ./wicap.o
 
 -include $(OBJS:%.o=%.d)
 
-all: wicap
+all: wicap offline_wicap
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-wicap: $(OBJS)
+wicap: wicap.o $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
+
+offline_wicap: offline_wicap.o $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 clean:
-	rm -f *.o wicap
+	rm -f *.o wicap offline_wicap
 
 .PHONY : clean
